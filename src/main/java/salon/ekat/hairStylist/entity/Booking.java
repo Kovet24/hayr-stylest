@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Booking {
+    Long id;
     Long masterId;
     Long clientId;
-    String procedureName;
-    LocalDateTime bookingDate;
+    Long procedureId;
+    LocalDateTime startDateTime;
+    LocalDateTime endDateTime;
 }

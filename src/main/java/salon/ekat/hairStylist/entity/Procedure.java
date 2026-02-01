@@ -10,8 +10,9 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 public class Procedure {
+    Long id;
     String name;
     String description;
-    Integer price;
+    Double price;
     Integer duration;
 }
