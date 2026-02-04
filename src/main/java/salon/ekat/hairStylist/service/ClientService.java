@@ -3,13 +3,14 @@ package salon.ekat.hairStylist.service;
 import salon.ekat.hairStylist.dto.ClientDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientService {
-    ClientDTO getClient(Long id);
+    Optional<ClientDTO> findById(Long id);
 
-    List<ClientDTO> getClients();
+    List<ClientDTO> findAll();
 
-    ClientDTO createClient(ClientDTO clientDTO);
+    ClientDTO save(ClientDTO clientDTO);
 
-    ClientDTO updateClient(ClientDTO clientDTO);
+    void deleteById(Long id);
 }
