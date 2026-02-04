@@ -46,4 +46,11 @@ public class ClientController {
         log.info("Получен PUT-запрос на обновление клиента с id={}", clientDTO.getId());
         return ResponseEntity.ok(clientService.save(clientDTO));
     }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteClient(Long id) {
+        log.info("Получен DELETE-запрос на удаление клиента с id={}", id);
+        clientService.deleteById(id);
+    }
 }
