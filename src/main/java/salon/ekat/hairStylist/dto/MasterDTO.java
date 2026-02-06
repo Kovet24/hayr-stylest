@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-public class ClientDTO {
+public class MasterDTO {
     Long id;
 
     @NotBlank

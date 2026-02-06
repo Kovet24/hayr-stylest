@@ -28,7 +28,6 @@ public class JdbcClientRepository implements ClientRepository {
     public Optional<Client> findById(Long id) {
         String sql = "SELECT * FROM clients WHERE id=?";
         List<Client> result = jdbcTemplate.query(sql, this::rowMapper, id);
-        Optional<Client> client;
 
         if (result.isEmpty()) {
             log.info("Клиент с id={} не найден", id);
@@ -38,7 +37,7 @@ public class JdbcClientRepository implements ClientRepository {
         }
 
         log.info("Получен клиент с id={}", id);
-        return client = Optional.of(result.getFirst());
+        return Optional.of(result.getFirst());
     }
 
     @Override
@@ -93,7 +92,7 @@ public class JdbcClientRepository implements ClientRepository {
         if (result == 1) {
             log.info("Удален клиент с id={}", id);
         } else {
-            throw new NoSuchElementException("Не удален фильм с id=%d".formatted(id));
+            throw new NoSuchElementException("Не удален мастер с id=%d".formatted(id));
         }
     }
 
