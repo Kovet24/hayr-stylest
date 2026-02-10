@@ -33,7 +33,7 @@ public class JdbcMasterRepository implements MasterRepository {
             log.info("Мастер с id={} не найден", id);
             return Optional.empty();
         } else if (result.size() > 1) {
-            throw new IllegalStateException("Больше одно мастера нашли по id: %d".formatted(id));
+            throw new IllegalStateException("Больше одного мастера нашли по id: %d".formatted(id));
         }
 
         log.info("Получен мастер с id={}", id);
@@ -57,7 +57,7 @@ public class JdbcMasterRepository implements MasterRepository {
             return addedMaster;
         } else {
             Master updatedMaster = updateMaster(master);
-            log.info("Обновлен мастер с id={}", master.getId());
+            log.info("Обновлен мастер с id={}", updatedMaster.getId());
             return updatedMaster;
         }
     }
@@ -75,12 +75,15 @@ public class JdbcMasterRepository implements MasterRepository {
 
     private Master updateMaster(Master master) {
         String sql = "UPDATE masters SET name=?, number=? WHERE id=?";
-        int rows = jdbcTemplate.update(sql, master.getName(), master.getNumber(), master.getId());
+        Long id = master.getId();
+        int rows = jdbcTemplate.update(sql, master.getName(), master.getNumber(), id);
 
         if (rows == 1) {
             return master;
+        } else if (rows == 0) {
+            throw new NoSuchElementException("Не найден мастер с id=%d".formatted(id));
         } else {
-            throw new IllegalStateException("Больше одно мастера нашли по id: %d".formatted(master.getId()));
+            throw new IllegalStateException("Больше одного мастера нашли по id: %d".formatted(id));
         }
     }
 
@@ -92,7 +95,7 @@ public class JdbcMasterRepository implements MasterRepository {
         if (result == 1) {
             log.info("Удален мастер с id={}", id);
         } else {
-            throw new NoSuchElementException("Не удален мастер с id=%d".formatted(id));
+            throw new NoSuchElementException("Не найден мастер с id=%d".formatted(id));
         }
     }
 

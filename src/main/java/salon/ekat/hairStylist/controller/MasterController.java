@@ -33,7 +33,7 @@ public class MasterController {
 
     @GetMapping
     public ResponseEntity<List<MasterDTO>> findAll() {
-        log.info("Получен GET-запрос на получение всех клиентов");
+        log.info("Получен GET-запрос на получение всех мастеров");
         return ResponseEntity.ok(masterService.findAll());
     }
 

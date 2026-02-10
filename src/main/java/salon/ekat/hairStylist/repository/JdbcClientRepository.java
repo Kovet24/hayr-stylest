@@ -33,7 +33,7 @@ public class JdbcClientRepository implements ClientRepository {
             log.info("Клиент с id={} не найден", id);
             return Optional.empty();
         } else if (result.size() > 1) {
-            throw new IllegalStateException("Больше одно клиента нашли по id: %d".formatted(id));
+            throw new IllegalStateException("Больше одного клиента нашли по id: %d".formatted(id));
         }
 
         log.info("Получен клиент с id={}", id);
@@ -57,7 +57,7 @@ public class JdbcClientRepository implements ClientRepository {
             return addedClient;
         } else {
             Client updatedClient = updateClient(client);
-            log.info("Обновлен клиент с id={}", client.getId());
+            log.info("Обновлен клиент с id={}", updatedClient.getId());
             return updatedClient;
         }
     }
@@ -75,12 +75,15 @@ public class JdbcClientRepository implements ClientRepository {
 
     private Client updateClient(Client client) {
         String sql = "UPDATE clients SET name=?, number=? WHERE id=?";
-        int rows = jdbcTemplate.update(sql, client.getName(), client.getNumber(), client.getId());
+        Long id = client.getId();
+        int rows = jdbcTemplate.update(sql, client.getName(), client.getNumber(), id);
 
         if (rows == 1) {
             return client;
+        } else if (rows == 0) {
+            throw new NoSuchElementException("Не найден клиент с id=%d".formatted(id));
         } else {
-            throw new IllegalStateException("Больше одно клиента нашли по id: %d".formatted(client.getId()));
+            throw new IllegalStateException("Больше одного клиента нашли по id: %d".formatted(id));
         }
     }
 
@@ -92,7 +95,7 @@ public class JdbcClientRepository implements ClientRepository {
         if (result == 1) {
             log.info("Удален клиент с id={}", id);
         } else {
-            throw new NoSuchElementException("Не удален мастер с id=%d".formatted(id));
+            throw new NoSuchElementException("Не найден клиент с id=%d".formatted(id));
         }
     }
 
