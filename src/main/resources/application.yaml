@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Hair Stylist
+
+  datasource:
+    url: jdbc:h2:mem:hairStylist
+    name: sa
+    password:
+
+  sql:
+    init:
+      mode: always
