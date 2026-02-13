@@ -17,3 +17,13 @@ CREATE TABLE services (
     price FLOAT,
     duration INTEGER
 );
+
+CREATE TABLE workdays (
+    master_id BIGINT REFERENCES masters(id) ON DELETE CASCADE,
+    day_of_work TIMESTAMP NOT NULL,
+    shift_start TIME NOT NULL,
+    shift_end TIME NOT NULL,
+    break_start TIME,
+    break_end TIME,
+    PRIMARY KEY (master_id, day_of_work)
+);

@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class Booking {
+public class Appointment {
     Long id;
     Long masterId;
     Long clientId;
     Long procedureId;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
+    // Status status; // на будущее
 }
