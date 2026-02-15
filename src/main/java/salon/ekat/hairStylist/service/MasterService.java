@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MasterService {
-    List<MasterDTO> findAll();
-
     Optional<MasterDTO> findById(Long id);
+
+    List<MasterDTO> findAll();
 
     MasterDTO save(MasterDTO masterDTO);
 
