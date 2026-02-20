@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-public class ServiceDTO {
+public class ProcedureDTO {
     Long id;
 
     @NotBlank

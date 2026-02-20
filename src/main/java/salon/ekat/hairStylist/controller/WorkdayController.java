@@ -36,11 +36,18 @@ public class WorkdayController {
     }
 
     @PostMapping
-    public ResponseEntity<WorkdayDTO> saveWorkday(@RequestBody WorkdayDTO workdayDTO) {
+    public ResponseEntity<WorkdayDTO> addWorkday(@RequestBody WorkdayDTO workdayDTO) {
         log.info("Получен POST-запрос на создания рабочего дня для мастера с id={}, на дату {}",
                 workdayDTO.getMasterId(), workdayDTO.getDayOfWork());
         return ResponseEntity.ok(workdayService.saveWorkday(workdayDTO));
     }
+
+/*    @PutMapping
+    public ResponseEntity<WorkdayDTO> updateWorkday(@RequestBody WorkdayDTO workdayDTO) {
+        log.info("Получен PUT-запрос на обновление рабочего дня для мастера с id={}, на дату {}",
+                workdayDTO.getMasterId(), workdayDTO.getDayOfWork());
+        return ResponseEntity.ok(workdayService.saveWorkday(workdayDTO));
+    }*/
 
     @DeleteMapping("/{masterId}")
     public void deleteWorkday(@PathVariable Long masterId, @RequestParam LocalDate date) {

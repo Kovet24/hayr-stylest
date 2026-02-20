@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import salon.ekat.hairStylist.entity.Service;
+import salon.ekat.hairStylist.entity.Procedure;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,18 +16,18 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-public class JdbcServiceRepository implements ServiceRepository {
+public class JdbcProcedureRepository implements ProcedureRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcServiceRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcProcedureRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Optional<Service> findById(Long id) {
-        String sql = "SELECT * FROM services WHERE id=?";
-        List<Service> result = jdbcTemplate.query(sql, this::rowMapper, id);
+    public Optional<Procedure> findById(Long id) {
+        String sql = "SELECT * FROM procedures WHERE id=?";
+        List<Procedure> result = jdbcTemplate.query(sql, this::rowMapper, id);
 
         if (result.isEmpty()) {
             log.info("Услуга с id={} не найден", id);
@@ -40,46 +40,46 @@ public class JdbcServiceRepository implements ServiceRepository {
     }
 
     @Override
-    public List<Service> findAll() {
-        String sql = "SELECT * FROM services";
-        List<Service> services = jdbcTemplate.query(sql, this::rowMapper);
+    public List<Procedure> findAll() {
+        String sql = "SELECT * FROM procedures";
+        List<Procedure> procedures = jdbcTemplate.query(sql, this::rowMapper);
 
         log.info("Получены все услуги");
-        return services;
+        return procedures;
     }
 
     @Override
-    public Service save(Service service) {
-        if (service.getId() == null || service.getId() == 0) {
-            Service addedService = addService(service);
-            log.info("Добавлена новая услуга с id={}", addedService.getId());
-            return addedService;
+    public Procedure save(Procedure procedure) {
+        if (procedure.getId() == null || procedure.getId() == 0) {
+            Procedure addedProcedure = addProcedure(procedure);
+            log.info("Добавлена новая услуга с id={}", addedProcedure.getId());
+            return addedProcedure;
         } else {
-            Service updatedService = updateService(service);
-            log.info("Обновлена услуга с id={}", updatedService.getId());
-            return updatedService;
+            Procedure updatedProcedure = updateProcedure(procedure);
+            log.info("Обновлена услуга с id={}", updatedProcedure.getId());
+            return updatedProcedure;
         }
     }
 
-    private Service addService(Service service) {
+    private Procedure addProcedure(Procedure procedure) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("services")
+                .withTableName("procedures")
                 .usingGeneratedKeyColumns("id");
 
-        Long serviceId = jdbcInsert.executeAndReturnKey(Map.of("id", service.getId())).longValue();
-        service.setId(serviceId);
+        Long procedureId = jdbcInsert.executeAndReturnKey(Map.of("id", procedure.getId())).longValue();
+        procedure.setId(procedureId);
 
-        return service;
+        return procedure;
     }
 
-    private Service updateService(Service service) {
-        String sql = "UPDATE service SET name=?, description=?, price=?, duration=? WHERE id=?";
-        Long id = service.getId();
-        int rows = jdbcTemplate.update(sql, service.getName(), service.getDescription(),
-                service.getPrice(), service.getDuration(), id);
+    private Procedure updateProcedure(Procedure procedure) {
+        String sql = "UPDATE procedures SET name=?, description=?, price=?, duration=? WHERE id=?";
+        Long id = procedure.getId();
+        int rows = jdbcTemplate.update(sql, procedure.getName(), procedure.getDescription(),
+                procedure.getPrice(), procedure.getDuration(), id);
 
         if (rows == 1) {
-            return service;
+            return procedure;
         } else if (rows == 0) {
             throw new NoSuchElementException("Не найдена услуга с id=%d".formatted(id));
         } else {
@@ -89,7 +89,7 @@ public class JdbcServiceRepository implements ServiceRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM services WHERE id=?";
+        String sql = "DELETE FROM procedures WHERE id=?";
         int result = jdbcTemplate.update(sql, id);
 
         if (result == 1) {
@@ -99,9 +99,9 @@ public class JdbcServiceRepository implements ServiceRepository {
         }
     }
 
-    private Service rowMapper(ResultSet rs, int rowNum) {
+    private Procedure rowMapper(ResultSet rs, int rowNum) {
         try {
-            return Service.builder()
+            return Procedure.builder()
                     .id(rs.getLong("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))

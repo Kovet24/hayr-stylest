@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-public class Service {
+public class Procedure {
     Long id;
     String name;
     String description;

@@ -11,6 +11,7 @@ import salon.ekat.hairStylist.entity.Workday;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -64,7 +65,33 @@ public class JdbcWorkdayRepository implements WorkdayRepository {
         jdbcInsert.execute(new BeanPropertySqlParameterSource(workday));
 
         return workday;
-    };
+    }
+
+    // Вопрос как проверять на обновление.
+    private Workday update(Workday workday) {
+        String sql = """
+                UPDATE workdays SET shift_start=?, shift_end=?, break_start=?, break_end=?
+                WHERE master_id=? AND day_of_work=?
+                """;
+        Long masterId = workday.getMasterId();
+        LocalDate dayOfWork = workday.getDayOfWork();
+        LocalTime shiftStart = workday.getShiftStart();
+        LocalTime shiftEnd = workday.getShiftEnd();
+        LocalTime breakStart = workday.getBreakStart();
+        LocalTime breakEnd = workday.getBreakEnd();
+        int rows = jdbcTemplate.update(sql, shiftStart, shiftEnd, breakStart, breakEnd, masterId, dayOfWork);
+
+        if (rows == 1) {
+            log.info("Обновлен рабочий день мастера с id={} на {}", masterId, dayOfWork);
+            return workday;
+        } else if (rows == 0) {
+            throw new NoSuchElementException("Не найден рабочий день мастера с id=%d на %s"
+                    .formatted(masterId, dayOfWork));
+        } else {
+            throw new IllegalStateException("Больше одного рабочего дня мастера с id=%d на %s"
+                    .formatted(masterId, dayOfWork));
+        }
+    }
 
     @Override
     public void deleteByMasterIdAndDayOfWork(Long masterId, LocalDate date) {
