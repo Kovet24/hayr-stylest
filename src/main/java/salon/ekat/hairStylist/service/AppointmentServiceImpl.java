@@ -6,16 +6,13 @@ import org.springframework.stereotype.Service;
 import salon.ekat.hairStylist.dto.AppointmentDTO;
 import salon.ekat.hairStylist.entity.Appointment;
 import salon.ekat.hairStylist.entity.Procedure;
-import salon.ekat.hairStylist.entity.Workday;
-import salon.ekat.hairStylist.exception.ConflictingAppointmentsException;
 import salon.ekat.hairStylist.mapper.AppointmentMapper;
 import salon.ekat.hairStylist.repository.AppointmentRepository;
 import salon.ekat.hairStylist.repository.ProcedureRepository;
 import salon.ekat.hairStylist.repository.WorkdayRepository;
+import salon.ekat.hairStylist.validator.AppointmentValidator;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,15 +82,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentDTO save(AppointmentDTO appointmentDTO) {
         Appointment appointment = AppointmentMapper.mapToObject(appointmentDTO);
-
-        if (validateAppointment(appointment)) {
-            changeEndDateTime(appointment);
-            return AppointmentMapper.mapToDTO(appointmentRepository.save(appointment));
-        }
-
-        String message = "Запись на %s от клиента с id=%d пересекается с другими записями"
-                .formatted(appointment.getStartDateTime(), appointment.getClientId());
-        throw new ConflictingAppointmentsException(message);
+        AppointmentValidator.validateAppointment(appointment, appointmentRepository, workdayRepository);
+        changeEndDateTime(appointment);
+        return AppointmentMapper.mapToDTO(appointmentRepository.save(appointment));
     }
 
     private void changeEndDateTime(Appointment appointment) {
@@ -106,47 +97,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         LocalDateTime startDateTime = appointment.getStartDateTime();
         appointment.setEndDateTime(startDateTime.plusMinutes(duration));
-    }
-
-    private boolean validateAppointment(Appointment appointment) {
-        Long masterId = appointment.getMasterId();
-        LocalDate date = appointment.getStartDateTime().toLocalDate();
-        Optional<Workday> workdayOptional = workdayRepository.findByMasterIdAndDayOfWork(masterId, date);
-
-        if (workdayOptional.isPresent()) {
-            Workday workday = workdayOptional.get();
-
-            if (validateWorkday(appointment, workday)) {
-                if (validateBreak(appointment, workday)) {
-                    return validateNoConflicts(appointment);
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean validateWorkday(Appointment appointment, Workday workday) {
-        LocalTime shiftStart = workday.getShiftStart();
-        LocalTime shiftEnd = workday.getShiftEnd();
-        LocalTime startTime = appointment.getStartDateTime().toLocalTime();
-        LocalTime endTime = appointment.getEndDateTime().toLocalTime();
-
-        return !shiftStart.isAfter(startTime) && !shiftEnd.isBefore(endTime);
-    }
-
-    private boolean validateBreak(Appointment appointment, Workday workday) {
-        LocalTime breakStart = workday.getBreakStart();
-        LocalTime breakEnd = workday.getBreakEnd();
-        LocalTime startTime = appointment.getStartDateTime().toLocalTime();
-        LocalTime endTime = appointment.getEndDateTime().toLocalTime();
-
-        return breakStart.isAfter(endTime) || breakEnd.isBefore(startTime);
-    }
-
-    private boolean validateNoConflicts(Appointment appointment) {
-        List<Appointment> conflictingAppointments = appointmentRepository.findConflictingAppointments(appointment);
-        return conflictingAppointments.isEmpty();
     }
 
     @Override
