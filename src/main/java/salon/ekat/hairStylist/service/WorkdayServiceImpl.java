@@ -2,6 +2,7 @@ package salon.ekat.hairStylist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import salon.ekat.hairStylist.dto.WorkdayDTO;
 import salon.ekat.hairStylist.entity.Workday;
 import salon.ekat.hairStylist.mapper.WorkdayMapper;
@@ -37,13 +38,15 @@ public class WorkdayServiceImpl implements WorkdayService {
     }
 
     @Override
-    public WorkdayDTO saveWorkday(WorkdayDTO workdayDTO) {
+    @Transactional
+    public WorkdayDTO save(WorkdayDTO workdayDTO) {
         Workday savedWorkday = workdayRepository.save(WorkdayMapper.mapToObject(workdayDTO));
         return WorkdayMapper.mapToDTO(savedWorkday);
     }
 
     @Override
-    public void deleteWorkday(Long masterId, LocalDate date) {
+    @Transactional
+    public void delete(Long masterId, LocalDate date) {
         workdayRepository.deleteByMasterIdAndDayOfWork(masterId, date);
     }
 }

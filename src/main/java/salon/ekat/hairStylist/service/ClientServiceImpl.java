@@ -3,6 +3,7 @@ package salon.ekat.hairStylist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import salon.ekat.hairStylist.dto.ClientDTO;
 import salon.ekat.hairStylist.entity.Client;
 import salon.ekat.hairStylist.mapper.ClientMapper;
@@ -36,12 +37,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public ClientDTO save(ClientDTO clientDTO) {
         Client savedClient = clientRepository.save(ClientMapper.mapToObject(clientDTO));
         return ClientMapper.mapToDTO(savedClient);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         clientRepository.deleteById(id);
     }

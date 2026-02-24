@@ -2,6 +2,7 @@ package salon.ekat.hairStylist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import salon.ekat.hairStylist.dto.ProcedureDTO;
 import salon.ekat.hairStylist.entity.Procedure;
 import salon.ekat.hairStylist.mapper.ProcedureMapper;
@@ -36,6 +37,7 @@ public class ProcedureServiceImpl implements ProcedureService {
     }
 
     @Override
+    @Transactional
     public ProcedureDTO save(ProcedureDTO procedureDTO) {
         return ProcedureMapper.mapToDTO(
                 procedureRepository.save(ProcedureMapper.mapToObject(procedureDTO))
@@ -43,6 +45,7 @@ public class ProcedureServiceImpl implements ProcedureService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         procedureRepository.deleteById(id);
     }

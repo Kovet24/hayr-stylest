@@ -2,6 +2,7 @@ package salon.ekat.hairStylist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import salon.ekat.hairStylist.dto.MasterDTO;
 import salon.ekat.hairStylist.entity.Master;
 import salon.ekat.hairStylist.mapper.MasterMapper;
@@ -35,12 +36,14 @@ public class MasterServiceImpl implements MasterService {
     }
 
     @Override
+    @Transactional
     public MasterDTO save(MasterDTO masterDTO) {
         Master savedMaster = masterRepository.save(MasterMapper.mapToObject(masterDTO));
         return MasterMapper.mapToDTO(savedMaster);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         masterRepository.deleteById(id);
     }

@@ -11,7 +11,7 @@ public interface WorkdayService {
 
     List<WorkdayDTO> getAllWorkdays(Long masterId);
 
-    WorkdayDTO saveWorkday(WorkdayDTO workdayDTO);
+    WorkdayDTO save(WorkdayDTO workdayDTO);
 
-    void deleteWorkday(Long masterId, LocalDate date);
+    void delete(Long masterId, LocalDate date);
 }

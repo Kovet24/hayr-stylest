@@ -3,6 +3,7 @@ package salon.ekat.hairStylist.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import salon.ekat.hairStylist.dto.AppointmentDTO;
 import salon.ekat.hairStylist.entity.Appointment;
 import salon.ekat.hairStylist.entity.Procedure;
@@ -80,6 +81,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
     public AppointmentDTO save(AppointmentDTO appointmentDTO) {
         Appointment appointment = AppointmentMapper.mapToObject(appointmentDTO);
         AppointmentValidator.validateAppointment(appointment, appointmentRepository, workdayRepository);
@@ -100,6 +102,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
     public AppointmentDTO updateStatusById(Long id, String status) {
         // В репозитории ещё нет реализации
         Appointment updatedAppointment = appointmentRepository.updateStatusById(id, status);
@@ -107,6 +110,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         appointmentRepository.deleteById(id);
     }
