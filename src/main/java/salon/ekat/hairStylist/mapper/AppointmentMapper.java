@@ -17,6 +17,7 @@ public class AppointmentMapper {
                 .procedureId(appointment.getProcedureId())
                 .startDateTime(appointment.getStartDateTime())
                 .endDateTime(appointment.getEndDateTime())
+                .status(appointment.getStatus())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class AppointmentMapper {
                 .procedureId(appointmentDTO.getProcedureId())
                 .startDateTime(appointmentDTO.getStartDateTime())
                 .endDateTime(appointmentDTO.getEndDateTime())
+                .status(appointmentDTO.getStatus())
                 .build();
     }
 

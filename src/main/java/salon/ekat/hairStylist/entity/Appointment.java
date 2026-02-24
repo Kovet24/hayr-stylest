@@ -18,5 +18,5 @@ public class Appointment {
     Long procedureId;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
-    // Status status; // на будущее
+    Status status;
 }

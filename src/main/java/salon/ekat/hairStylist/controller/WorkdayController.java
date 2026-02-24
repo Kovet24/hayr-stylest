@@ -39,7 +39,7 @@ public class WorkdayController {
     public ResponseEntity<WorkdayDTO> addWorkday(@RequestBody WorkdayDTO workdayDTO) {
         log.info("Получен POST-запрос на создания рабочего дня для мастера с id={}, на дату {}",
                 workdayDTO.getMasterId(), workdayDTO.getDayOfWork());
-        return ResponseEntity.ok(workdayService.saveWorkday(workdayDTO));
+        return ResponseEntity.ok(workdayService.save(workdayDTO));
     }
 
 /*    @PutMapping
@@ -52,6 +52,6 @@ public class WorkdayController {
     @DeleteMapping("/{masterId}")
     public void deleteWorkday(@PathVariable Long masterId, @RequestParam LocalDate date) {
         log.info("Получен DELETE-запрос на удаление рабочего дня для мастера с id={}, на дату {}", masterId, date);
-        workdayService.deleteWorkday(masterId, date);
+        workdayService.delete(masterId, date);
     }
 }

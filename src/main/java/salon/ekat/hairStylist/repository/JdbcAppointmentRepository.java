@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import salon.ekat.hairStylist.entity.Appointment;
+import salon.ekat.hairStylist.entity.Status;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -189,6 +190,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
                     .procedureId(rs.getLong("procedure_id"))
                     .startDateTime(rs.getTimestamp("start_date_time").toLocalDateTime())
                     .endDateTime(rs.getTimestamp("end_date_time").toLocalDateTime())
+                    .status(Status.valueOf(rs.getString("status")))
                     .build();
         } catch (SQLException e) {
             throw new RuntimeException(e);

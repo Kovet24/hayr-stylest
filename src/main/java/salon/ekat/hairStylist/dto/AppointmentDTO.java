@@ -3,6 +3,7 @@ package salon.ekat.hairStylist.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import salon.ekat.hairStylist.entity.Status;
 
 import java.time.LocalDateTime;
 
@@ -28,4 +29,6 @@ public class AppointmentDTO {
     LocalDateTime startDateTime;
 
     LocalDateTime endDateTime;
+
+    Status status;
 }
